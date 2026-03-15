@@ -35,7 +35,7 @@ const ConvertTool = () => {
         page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
       }
       const pdfBytes = await doc.save();
-      saveAs(new Blob([pdfBytes], { type: "application/pdf" }), "converted.pdf");
+      saveAs(new Blob([pdfBytes.buffer as ArrayBuffer], { type: "application/pdf" }), "converted.pdf");
     } catch (e) {
       console.error(e);
     } finally {

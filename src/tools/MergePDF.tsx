@@ -32,7 +32,7 @@ const MergePDF = () => {
         pages.forEach((page) => merged.addPage(page));
       }
       const pdfBytes = await merged.save();
-      saveAs(new Blob([pdfBytes], { type: "application/pdf" }), "merged.pdf");
+      saveAs(new Blob([pdfBytes.buffer as ArrayBuffer], { type: "application/pdf" }), "merged.pdf");
     } catch (e) {
       console.error(e);
     } finally {
