@@ -7,13 +7,23 @@ import SplitPDF from "@/tools/SplitPDF";
 import CompressImage from "@/tools/CompressImage";
 import ConvertTool from "@/tools/ConvertTool";
 import OCRTool from "@/tools/OCRTool";
+import AISummarize from "@/tools/AISummarize";
+import AITranslate from "@/tools/AITranslate";
+import AIQuestions from "@/tools/AIQuestions";
+import AddWatermark from "@/tools/AddWatermark";
+import CompressPDF from "@/tools/CompressPDF";
 
 const TOOL_COMPONENTS: Record<string, React.ComponentType<any> | null> = {
   merge: MergePDF,
   split: SplitPDF,
   "compress-img": CompressImage,
+  "compress-pdf": CompressPDF,
   convert: ConvertTool,
   ocr: OCRTool,
+  "ai-summarize": AISummarize,
+  "ai-translate": AITranslate,
+  "ai-questions": AIQuestions,
+  "add-watermark": AddWatermark,
 };
 
 const Index = () => {
