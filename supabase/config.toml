@@ -1,0 +1,10 @@
+project_id = "xpikoybjhmtnggwpzttd"
+
+[functions.ai-summarize]
+verify_jwt = false
+
+[functions.ai-translate]
+verify_jwt = false
+
+[functions.ai-questions]
+verify_jwt = false

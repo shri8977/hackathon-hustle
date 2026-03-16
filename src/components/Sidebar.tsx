@@ -1,22 +1,40 @@
-import { FileText, Image, ScanText, Scissors, Combine, Minimize2, FileOutput, Home } from "lucide-react";
+import { 
+  FileText, Image, ScanText, Scissors, Combine, Minimize2, FileOutput, Home, 
+  Sparkles, Languages, HelpCircle, Droplets, FileDown
+} from "lucide-react";
 import { motion } from "framer-motion";
+import ThemeToggle from "./ThemeToggle";
 
-export type ToolId = "home" | "merge" | "split" | "compress-pdf" | "compress-img" | "convert" | "ocr";
+export type ToolId = 
+  | "home" 
+  | "merge" | "split" | "compress-pdf" | "compress-img" | "convert"
+  | "ocr" | "ai-summarize" | "ai-translate" | "ai-questions"
+  | "add-watermark";
 
 interface Tool {
   id: ToolId;
   label: string;
   icon: React.ElementType;
   category: string;
+  description: string;
 }
 
 export const TOOLS: Tool[] = [
-  { id: "home", label: "Home", icon: Home, category: "" },
-  { id: "merge", label: "Merge PDF", icon: Combine, category: "PDF" },
-  { id: "split", label: "Split PDF", icon: Scissors, category: "PDF" },
-  { id: "compress-img", label: "Compress Image", icon: Minimize2, category: "Image" },
-  { id: "convert", label: "Convert", icon: FileOutput, category: "Convert" },
-  { id: "ocr", label: "Extract Text", icon: ScanText, category: "AI" },
+  { id: "home", label: "Home", icon: Home, category: "", description: "" },
+  // AI Tools
+  { id: "ai-summarize", label: "AI Summarize", icon: Sparkles, category: "AI Tools", description: "Summarize documents with AI" },
+  { id: "ai-translate", label: "AI Translate", icon: Languages, category: "AI Tools", description: "Translate text to any language" },
+  { id: "ai-questions", label: "Question Generator", icon: HelpCircle, category: "AI Tools", description: "Generate study questions" },
+  { id: "ocr", label: "OCR Extract Text", icon: ScanText, category: "AI Tools", description: "Extract text from images" },
+  // PDF Tools
+  { id: "merge", label: "Merge PDF", icon: Combine, category: "Organize", description: "Combine multiple PDFs" },
+  { id: "split", label: "Split PDF", icon: Scissors, category: "Organize", description: "Split PDF into parts" },
+  { id: "compress-pdf", label: "Compress PDF", icon: Minimize2, category: "Organize", description: "Reduce PDF file size" },
+  // Editing
+  { id: "add-watermark", label: "Add Watermark", icon: Droplets, category: "Editing", description: "Stamp watermark on PDF" },
+  // Convert
+  { id: "convert", label: "Convert", icon: FileOutput, category: "Convert", description: "Convert between formats" },
+  { id: "compress-img", label: "Compress Image", icon: Image, category: "Convert", description: "Reduce image file size" },
 ];
 
 const spring = { type: "spring" as const, stiffness: 400, damping: 30 };
@@ -31,13 +49,14 @@ const Sidebar = ({ activeTool, onSelectTool }: SidebarProps) => {
 
   return (
     <aside className="w-64 h-screen fixed left-0 top-0 bg-surface border-r border-border/50 flex flex-col z-40">
-      <div className="h-16 flex items-center px-5 border-b border-border/50">
+      <div className="h-16 flex items-center justify-between px-5 border-b border-border/50">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
             <FileText className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="font-semibold text-foreground text-base tracking-tight">DocForge</span>
+          <span className="font-semibold text-foreground text-base tracking-tight">DocFlow AI</span>
         </div>
+        <ThemeToggle />
       </div>
 
       <nav className="flex-1 py-3 px-3 space-y-0.5 overflow-y-auto">
@@ -79,8 +98,8 @@ const Sidebar = ({ activeTool, onSelectTool }: SidebarProps) => {
       </nav>
 
       <div className="p-4 border-t border-border/50">
-        <p className="mono-text text-muted-foreground">100% Client-Side</p>
-        <p className="mono-text text-muted-foreground">No file size limits</p>
+        <p className="mono-text text-muted-foreground">AI-Powered • Max 20MB</p>
+        <p className="mono-text text-muted-foreground">Files processed in memory</p>
       </div>
     </aside>
   );
