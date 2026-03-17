@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { Menu, FileText } from "lucide-react";
 import Sidebar, { ToolId } from "@/components/Sidebar";
 import StatusTicker from "@/components/StatusTicker";
 import HomeView from "@/components/HomeView";
+import ThemeToggle from "@/components/ThemeToggle";
 import MergePDF from "@/tools/MergePDF";
 import SplitPDF from "@/tools/SplitPDF";
 import CompressImage from "@/tools/CompressImage";
@@ -28,15 +30,38 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType<any> | null> = {
 
 const Index = () => {
   const [activeTool, setActiveTool] = useState<ToolId>("home");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const ActiveComponent = activeTool !== "home" ? TOOL_COMPONENTS[activeTool] : null;
 
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar activeTool={activeTool} onSelectTool={setActiveTool} />
+      <Sidebar
+        activeTool={activeTool}
+        onSelectTool={setActiveTool}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
-      <main className="ml-64 pb-12">
-        <div className="max-w-4xl mx-auto px-8 py-12">
+      {/* Mobile top bar */}
+      <header className="md:hidden fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border/50 flex items-center justify-between px-4 z-30">
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+            <FileText className="w-3.5 h-3.5 text-primary-foreground" />
+          </div>
+          <span className="font-semibold text-foreground text-sm tracking-tight">DocFlow AI</span>
+        </div>
+        <ThemeToggle />
+      </header>
+
+      <main className="md:ml-64 pb-12 pt-14 md:pt-0">
+        <div className="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
           {activeTool === "home" ? (
             <HomeView onSelectTool={setActiveTool} />
           ) : ActiveComponent ? (
