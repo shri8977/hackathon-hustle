@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { TOOLS, ToolId } from "./Sidebar";
-import { Zap, Shield, Brain } from "lucide-react";
+import { Zap, Shield, Brain, PartyPopper } from "lucide-react";
+import confetti from "canvas-confetti";
 
 const spring = { type: "spring" as const, stiffness: 400, damping: 30 };
 
