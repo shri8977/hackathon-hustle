@@ -48,7 +48,18 @@ const HomeView = ({ onSelectTool }: HomeViewProps) => {
 
   return (
     <div>
-      <div className="mb-12">
+      <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ ...spring, delay: 0.1 }}
+          className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-pink-500/10 via-yellow-500/10 to-purple-500/10 border border-pink-500/20 flex items-center gap-3"
+        >
+          <PartyPopper className="w-6 h-6 text-pink-500 shrink-0" />
+          <p className="text-sm font-medium text-foreground">
+            🎂 Happy Birthday! Here's a little celebration from <span className="text-primary font-bold">DocFlow AI</span> — wishing you an amazing year ahead! 🎉
+          </p>
+        </motion.div>
+
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
