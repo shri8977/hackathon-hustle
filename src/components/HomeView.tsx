@@ -1,8 +1,6 @@
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { TOOLS, ToolId } from "./Sidebar";
-import { Zap, Shield, Brain, PartyPopper } from "lucide-react";
-import confetti from "canvas-confetti";
+import { Zap, Shield, Brain } from "lucide-react";
 
 const spring = { type: "spring" as const, stiffness: 400, damping: 30 };
 
@@ -21,44 +19,8 @@ const CATEGORIES = ["AI Tools", "Organize", "Editing", "Convert"];
 const HomeView = ({ onSelectTool }: HomeViewProps) => {
   const tools = TOOLS.filter((t) => t.id !== "home");
 
-  useEffect(() => {
-    const duration = 3000;
-    const end = Date.now() + duration;
-    const colors = ["#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3", "#54a0ff", "#5f27cd"];
-
-    const frame = () => {
-      confetti({
-        particleCount: 3,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0, y: 0.7 },
-        colors,
-      });
-      confetti({
-        particleCount: 3,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1, y: 0.7 },
-        colors,
-      });
-      if (Date.now() < end) requestAnimationFrame(frame);
-    };
-    frame();
-  }, []);
-
   return (
     <div>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ ...spring, delay: 0.1 }}
-        className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-primary/10 via-accent/30 to-primary/10 border border-primary/20 flex items-center gap-3"
-      >
-        <PartyPopper className="w-6 h-6 text-primary shrink-0" />
-        <p className="text-sm font-medium text-foreground">
-          🎂 Happy Birthday! Here's a little celebration from <span className="text-primary font-bold">DocFlow AI</span> — wishing you an amazing year ahead! 🎉
-        </p>
-      </motion.div>
 
       <div className="mb-12">
         <motion.h1
