@@ -21,6 +21,31 @@ const CATEGORIES = ["AI Tools", "Organize", "Editing", "Convert"];
 const HomeView = ({ onSelectTool }: HomeViewProps) => {
   const tools = TOOLS.filter((t) => t.id !== "home");
 
+  useEffect(() => {
+    const duration = 3000;
+    const end = Date.now() + duration;
+    const colors = ["#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3", "#54a0ff", "#5f27cd"];
+
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 },
+        colors,
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 },
+        colors,
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    };
+    frame();
+  }, []);
+
   return (
     <div>
       <div className="mb-12">
