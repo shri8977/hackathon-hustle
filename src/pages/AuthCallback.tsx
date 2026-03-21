@@ -7,14 +7,23 @@ const AuthCallback = () => {
 
   useEffect(() => {
     const handleAuth = async () => {
-      await supabase.auth.getSession();
-      navigate("/");
+      const { data } = await supabase.auth.getSession();
+
+      if (data.session) {
+        navigate("/"); // ✅ go to main page
+      } else {
+        navigate("/auth"); // fallback
+      }
     };
 
     handleAuth();
   }, []);
 
-  return <div>Loading...</div>;
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      Logging you in...
+    </div>
+  );
 };
 
 export default AuthCallback;
