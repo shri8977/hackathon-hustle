@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FileText, Mail, Lock, User, Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -59,8 +58,11 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin,
+        },
       });
       if (error) throw error;
     } catch (error: any) {
@@ -100,7 +102,6 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Left panel - branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-primary/5 items-center justify-center p-12 relative">
         <div className="absolute top-6 left-6">
           <ThemeToggle />
@@ -133,7 +134,6 @@ const Auth = () => {
         </motion.div>
       </div>
 
-      {/* Right panel - auth form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
         <div className="lg:hidden absolute top-4 right-4">
           <ThemeToggle />
@@ -144,7 +144,6 @@ const Auth = () => {
           transition={spring}
           className="w-full max-w-sm space-y-6"
         >
-          {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2.5 justify-center mb-4">
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
               <FileText className="w-5 h-5 text-primary-foreground" />
@@ -161,7 +160,6 @@ const Auth = () => {
             </p>
           </div>
 
-          {/* Google Sign In */}
           <Button
             variant="outline"
             className="w-full h-11 gap-2"
@@ -190,7 +188,6 @@ const Auth = () => {
             </div>
           </div>
 
-          {/* Email form */}
           <form onSubmit={handleEmailAuth} className="space-y-4">
             {!isLogin && (
               <div className="relative">
