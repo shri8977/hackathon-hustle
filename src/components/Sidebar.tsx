@@ -1,9 +1,11 @@
 import { 
   FileText, Image, ScanText, Scissors, Combine, Minimize2, FileOutput, Home, 
-  Sparkles, Languages, HelpCircle, Droplets, FileDown, Menu, X
+  Sparkles, Languages, HelpCircle, Droplets, LogOut, X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
+import { useAuth } from "@/contexts/AuthContext";
+import { Badge } from "@/components/ui/badge";
 
 export type ToolId = 
   | "home" 
@@ -17,6 +19,7 @@ interface Tool {
   icon: React.ElementType;
   category: string;
   description: string;
+  beta?: boolean;
 }
 
 export const TOOLS: Tool[] = [
@@ -29,7 +32,7 @@ export const TOOLS: Tool[] = [
   { id: "split", label: "Split PDF", icon: Scissors, category: "Organize", description: "Split PDF into parts" },
   { id: "compress-pdf", label: "Compress PDF", icon: Minimize2, category: "Organize", description: "Reduce PDF file size" },
   { id: "add-watermark", label: "Add Watermark", icon: Droplets, category: "Editing", description: "Stamp watermark on PDF" },
-  { id: "convert", label: "Convert", icon: FileOutput, category: "Convert", description: "Convert between formats" },
+  { id: "convert", label: "Convert", icon: FileOutput, category: "Convert", description: "Convert between formats", beta: true },
   { id: "compress-img", label: "Compress Image", icon: Image, category: "Convert", description: "Reduce image file size" },
 ];
 
@@ -43,6 +46,7 @@ interface SidebarProps {
 }
 
 const SidebarContent = ({ activeTool, onSelectTool }: { activeTool: ToolId; onSelectTool: (id: ToolId) => void }) => {
+  const { user, signOut } = useAuth();
   let lastCategory = "";
 
   return (
@@ -72,7 +76,12 @@ const SidebarContent = ({ activeTool, onSelectTool }: { activeTool: ToolId; onSe
               >
                 <tool.icon className="w-4 h-4" />
                 {tool.label}
-                {activeTool === tool.id && (
+                {tool.beta && (
+                  <Badge variant="outline" className="ml-auto text-[9px] px-1.5 py-0 h-4 border-primary/40 text-primary font-semibold">
+                    BETA
+                  </Badge>
+                )}
+                {activeTool === tool.id && !tool.beta && (
                   <motion.div
                     layoutId="active-indicator"
                     className="ml-auto w-1.5 h-1.5 rounded-full bg-primary"
@@ -85,9 +94,32 @@ const SidebarContent = ({ activeTool, onSelectTool }: { activeTool: ToolId; onSe
         })}
       </nav>
 
-      <div className="p-4 border-t border-border/50">
-        <p className="mono-text text-muted-foreground">AI-Powered • Max 20MB</p>
-        <p className="mono-text text-muted-foreground">Files processed in memory</p>
+      <div className="p-4 border-t border-border/50 space-y-3">
+        {user && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <span className="text-xs font-semibold text-primary">
+                  {(user.user_metadata?.full_name || user.email || "U").charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <span className="text-xs text-muted-foreground truncate">
+                {user.user_metadata?.full_name || user.email}
+              </span>
+            </div>
+            <button
+              onClick={signOut}
+              className="p-1.5 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+              title="Sign out"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+        <div>
+          <p className="mono-text text-muted-foreground">AI-Powered • Max 20MB</p>
+          <p className="mono-text text-muted-foreground">Files processed in memory</p>
+        </div>
       </div>
     </>
   );

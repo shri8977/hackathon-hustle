@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { TOOLS, ToolId } from "./Sidebar";
 import { Zap, Shield, Brain } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const spring = { type: "spring" as const, stiffness: 400, damping: 30 };
 
@@ -67,8 +68,13 @@ const HomeView = ({ onSelectTool }: HomeViewProps) => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => onSelectTool(tool.id)}
-                  className="tool-card text-left"
+                  className="tool-card text-left relative"
                 >
+                  {tool.beta && (
+                    <Badge variant="outline" className="absolute top-3 right-3 text-[9px] px-1.5 py-0 h-4 border-primary/40 text-primary font-semibold">
+                      BETA
+                    </Badge>
+                  )}
                   <tool.icon className="w-5 h-5 text-primary mb-3" />
                   <p className="text-sm font-semibold text-foreground">{tool.label}</p>
                   <p className="text-xs text-muted-foreground mt-1">{tool.description}</p>
