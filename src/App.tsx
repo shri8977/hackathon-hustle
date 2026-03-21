@@ -8,9 +8,7 @@ import Index from "./pages/Index.tsx";
 import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import NotFound from "./pages/NotFound.tsx";
-
 const queryClient = new QueryClient();
-
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   if (loading) {
@@ -23,7 +21,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (!user) return <Navigate to="/auth" replace />;
   return <>{children}</>;
 };
-
 const AuthRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   if (loading) {
@@ -36,7 +33,6 @@ const AuthRoute = ({ children }: { children: React.ReactNode }) => {
   if (user) return <Navigate to="/" replace />;
   return <>{children}</>;
 };
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -56,6 +52,4 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
-
 export default App;
-
