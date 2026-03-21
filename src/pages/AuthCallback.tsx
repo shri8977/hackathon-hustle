@@ -41,7 +41,7 @@ const AuthCallback = () => {
       const { data } = await supabase.auth.getSession();
 
       if (data.session) {
-        navigate("/"); // ✅ go to main page
+        navigate("/index.tsx"); // ✅ go to main page
       } else {
         navigate("/auth"); // fallback
       }
