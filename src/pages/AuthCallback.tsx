@@ -7,12 +7,22 @@ const AuthCallback = () => {
 
   useEffect(() => {
     const handleAuth = async () => {
-      const { data } = await supabase.auth.getSession();
+      // 🔥 IMPORTANT: wait for session to be set
+      const { data: { session } } = await supabase.auth.getSession();
 
-      if (data.session) {
+      if (session) {
         navigate("/");
       } else {
-        navigate("/");
+        // fallback retry (very important)
+        setTimeout(async () => {
+          const { data: { session } } = await supabase.auth.getSession();
+
+          if (session) {
+            navigate("/");
+          } else {
+            navigate("/auth");
+          }
+        }, 1000); // wait 1 second
       }
     };
 
