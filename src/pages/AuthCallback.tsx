@@ -12,7 +12,7 @@ const AuthCallback = () => {
       if (data.session) {
         navigate("/");
       } else {
-        navigate("/auth");
+        navigate("/");
       }
     };
 
