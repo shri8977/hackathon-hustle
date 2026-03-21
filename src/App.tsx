@@ -46,6 +46,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+            <Route path="/auth/callback" element={<Navigate to="/" replace />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
@@ -57,3 +58,8 @@ const App = () => (
 );
 
 export default App;
+```
+
+Then go to **Supabase → Authentication → URL Configuration** and change Redirect URLs to:
+```
+https://docflow-ai-pi.vercel.app/auth/callback
