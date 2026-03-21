@@ -1,73 +1,172 @@
-# Welcome to your Lovable project
+# 🔥 DocFlow AI — AI-Powered Document Tools
 
-## Project info
+> **Summarize, Translate, Merge, Split, Compress & Convert** — all powered by AI, processed securely in your browser.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+![DocFlow AI](https://img.shields.io/badge/DocFlow_AI-v1.0-orange?style=for-the-badge)
+![React](https://img.shields.io/badge/React-18-blue?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=flat-square&logo=tailwindcss)
+![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 📌 About
 
-**Use Lovable**
+**DocFlow AI** is a modern, full-stack web application that provides AI-powered document processing tools — similar to iLovePDF but enhanced with artificial intelligence. All file processing happens **in-memory** for maximum privacy and speed.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 👥 Team Information
 
-**Use your preferred IDE**
+| Role | Name |
+|------|------|
+| **AI & Backend** | _[Your Name]_ |
+| **Frontend & UI** | _[Friend's Name]_ |
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## ✨ Features — Fully Working
 
-Follow these steps:
+### 🤖 AI Tools
+- **AI Summarize** — Upload text/documents → get AI-generated summaries
+- **AI Translate** — Translate document content into any target language
+- **AI Question Generator** — Generate study/quiz questions from documents
+- **OCR Text Extraction** — Extract text from scanned images using Tesseract.js
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 📄 PDF Organize Tools
+- **Merge PDF** — Combine multiple PDF files into one
+- **Split PDF** — Extract specific page ranges into separate files
+- **Compress PDF** — Reduce PDF file size while maintaining quality
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### ✏️ Editing Tools
+- **Add Watermark** — Stamp custom text watermarks on all PDF pages (adjustable opacity)
 
-# Step 3: Install the necessary dependencies.
-npm i
+### 🔄 Convert Tools
+- **Image ↔ PDF** — Convert images to PDF and vice versa
+- **Compress Image** — Reduce image file size with quality control
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 🔐 Authentication
+- **Email + Password** sign up with **email verification**
+- **Google OAuth** sign-in (one-click)
+- Protected routes — all tools require authentication
+
+### 🎨 UI/UX
+- Dark/Light mode toggle
+- Responsive design — mobile-friendly with collapsible sidebar
+- Drag & drop file upload with validation
+- Processing animations and toast notifications
+
+---
+
+## 🚧 Features in Beta (Future Scope)
+
+| Feature | Status |
+|---------|--------|
+| PDF → Word Conversion | 🔶 Beta |
+| Word → PDF Conversion | 🔶 Beta |
+| Excel → PDF Conversion | 🔶 Beta |
+| PPT → PDF Conversion | 🔶 Beta |
+| Remove Watermark | 🔶 Beta |
+| Edit PDF (inline text) | 🔶 Beta |
+
+These features are marked with a **BETA** badge in the UI.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React 18, TypeScript, Vite 5 |
+| **Styling** | Tailwind CSS 3, shadcn/ui, Framer Motion |
+| **Backend** | Supabase Edge Functions |
+| **AI** | Google Gemini / OpenAI via AI Gateway |
+| **Auth** | Supabase Auth + Google OAuth |
+| **PDF Processing** | pdf-lib (client-side) |
+| **OCR** | Tesseract.js (client-side) |
+| **Image Processing** | browser-image-compression |
+| **File Handling** | JSZip, FileSaver.js |
+
+---
+
+## 🚀 How It Works
+
+```
+User uploads file
+  → Client-side validation (type + size ≤ 20MB)
+  → Process in-memory (pdf-lib / Tesseract / AI API)
+  → Return result for download
+  → Files are NEVER permanently stored
+```
+
+---
+
+## 📂 Project Structure
+
+```
+src/
+├── components/        # Reusable UI components
+│   ├── Sidebar.tsx    # Navigation with tool categories
+│   ├── HomeView.tsx   # Dashboard with tool cards
+│   └── FileDropZone.tsx
+├── contexts/          # Auth context provider
+├── pages/             # Route pages (Index, Auth, ResetPassword)
+├── tools/             # Individual tool implementations
+│   ├── AISummarize.tsx
+│   ├── AITranslate.tsx
+│   ├── AIQuestions.tsx
+│   ├── OCRTool.tsx
+│   ├── MergePDF.tsx
+│   ├── SplitPDF.tsx
+│   ├── CompressPDF.tsx
+│   ├── AddWatermark.tsx
+│   ├── CompressImage.tsx
+│   └── ConvertTool.tsx
+├── lib/               # Utilities and API helpers
+└── integrations/      # Backend client configuration
+supabase/
+└── functions/         # Edge Functions (AI endpoints)
+```
+
+---
+
+## 🔒 Security & Privacy
+
+- No permanent file storage — all processing in browser memory
+- Email verification required for account creation
+- Google OAuth for secure one-click sign-in
+- Protected routes — authentication required for all tools
+
+---
+
+## 🖥️ How to Navigate
+
+1. **Sign Up / Sign In** — Email (verified) or Google OAuth
+2. **Dashboard** — Browse tools by category (AI, Organize, Editing, Convert)
+3. **Select a Tool** — Click any tool card
+4. **Upload File** — Drag & drop or click (max 20MB)
+5. **Process** — Click the action button
+6. **Download** — Get your result instantly
+
+---
+
+## 🏃 Running Locally
+
+```bash
+git clone <your-repo-url>
+cd docflow-ai
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Runs on `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 📄 License
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+MIT License
 
-## What technologies are used for this project?
+---
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Built with ❤️ using **React** + **TypeScript** + **AI**
