@@ -12,7 +12,7 @@ const AuthCallback = () => {
       if (data.session) {
         // wait a bit so context updates
         setTimeout(() => {
-          navigate("/");
+          navigate("/index.tsx");
         }, 300);
       } else {
         navigate("/auth");
