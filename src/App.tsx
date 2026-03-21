@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Index from "./pages/Index.tsx";
+import AuthCallback from "./pages/AuthCallback";
 import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -41,12 +42,12 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-            <Route path="/auth/callback" element={<Navigate to="/" replace />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+  <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+  <Route path="/auth/callback" element={<AuthCallback />} />
+  <Route path="/reset-password" element={<ResetPassword />} />
+  <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+  <Route path="*" element={<NotFound />} />
+</Routes>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
