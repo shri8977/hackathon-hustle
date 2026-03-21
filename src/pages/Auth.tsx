@@ -61,7 +61,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: "https://docflow-ai-pi.vercel.app/auth/callback"
         },
       });
       if (error) throw error;
