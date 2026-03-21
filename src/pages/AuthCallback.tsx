@@ -10,10 +10,7 @@ const AuthCallback = () => {
       const { data } = await supabase.auth.getSession();
 
       if (data.session) {
-        // wait a bit so context updates
-        setTimeout(() => {
-          navigate("/");
-        }, 300);
+        navigate("/");
       } else {
         navigate("/auth");
       }
@@ -22,11 +19,7 @@ const AuthCallback = () => {
     handleAuth();
   }, []);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      Logging you in...
-    </div>
-  );
+  return <div>Logging you in...</div>;
 };
 
 export default AuthCallback;
