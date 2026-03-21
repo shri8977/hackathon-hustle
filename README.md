@@ -20,8 +20,8 @@
 
 | Role | Name |
 |------|------|
-| **AI & Backend** | _[Your Name]_ |
-| **Frontend & UI** | _[Friend's Name]_ |
+| **AI & Backend** | m.shri subashini|
+| **Frontend & UI** | k.prakash|
 
 ---
 
