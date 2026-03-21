@@ -1,5 +1,4 @@
-project_id = "xpikoybjhmtnggwpzttd"
-
+project_id = "ynzvlievyxmmwqpegqdj"
 [functions.ai-summarize]
 verify_jwt = false
 
