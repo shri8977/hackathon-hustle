@@ -12,7 +12,7 @@ const AuthCallback = () => {
       if (data.session) {
         // wait a bit so context updates
         setTimeout(() => {
-          navigate("/index.tsx");
+          navigate("/");
         }, 300);
       } else {
         navigate("/auth");
@@ -41,7 +41,7 @@ const AuthCallback = () => {
       const { data } = await supabase.auth.getSession();
 
       if (data.session) {
-        navigate("/index.tsx"); // ✅ go to main page
+        navigate("/"); // ✅ go to main page
       } else {
         navigate("/auth"); // fallback
       }
