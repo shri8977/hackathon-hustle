@@ -153,7 +153,7 @@ supabase/
 ## 🏃 Running Locally
 
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/shri8977/hackathon-hustle>
 cd docflow-ai
 npm install
 npm run dev
