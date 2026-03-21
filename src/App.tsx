@@ -58,8 +58,4 @@ const App = () => (
 );
 
 export default App;
-```
 
-Then go to **Supabase → Authentication → URL Configuration** and change Redirect URLs to:
-```
-https://docflow-ai-pi.vercel.app/auth/callback
