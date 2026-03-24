@@ -1,11 +1,14 @@
+import { useState, useEffect } from "react";
 import { 
   FileText, Image, ScanText, Scissors, Combine, Minimize2, FileOutput, Home, 
-  Sparkles, Languages, HelpCircle, Droplets, LogOut, X
+  Sparkles, Languages, HelpCircle, Droplets, LogOut, X, Settings
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import ProfileDialog from "./ProfileDialog";
 
 export type ToolId = 
   | "home" 
@@ -47,7 +50,24 @@ interface SidebarProps {
 
 const SidebarContent = ({ activeTool, onSelectTool }: { activeTool: ToolId; onSelectTool: (id: ToolId) => void }) => {
   const { user, signOut } = useAuth();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [profile, setProfile] = useState<{ full_name: string | null; avatar_url: string | null } | null>(null);
   let lastCategory = "";
+
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", user.id)
+        .single()
+        .then(({ data }) => setProfile(data));
+    }
+  }, [user, profileOpen]);
+
+  const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || "User";
+  const avatarUrl = profile?.avatar_url || user?.user_metadata?.avatar_url;
+  const initial = displayName.charAt(0).toUpperCase();
 
   return (
     <>
@@ -97,23 +117,42 @@ const SidebarContent = ({ activeTool, onSelectTool }: { activeTool: ToolId; onSe
       <div className="p-4 border-t border-border/50 space-y-3">
         {user && (
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <span className="text-xs font-semibold text-primary">
-                  {(user.user_metadata?.full_name || user.email || "U").charAt(0).toUpperCase()}
+            <button
+              onClick={() => setProfileOpen(true)}
+              className="flex items-center gap-2 min-w-0 group"
+            >
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ring-transparent group-hover:ring-primary/30 transition-all">
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-xs font-semibold text-primary">{initial}</span>
+                )}
+              </div>
+              <div className="flex flex-col items-start min-w-0">
+                <span className="text-xs font-medium text-foreground truncate max-w-[120px]">
+                  {displayName}
+                </span>
+                <span className="text-[10px] text-muted-foreground truncate max-w-[120px]">
+                  {user.email}
                 </span>
               </div>
-              <span className="text-xs text-muted-foreground truncate">
-                {user.user_metadata?.full_name || user.email}
-              </span>
-            </div>
-            <button
-              onClick={signOut}
-              className="p-1.5 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-              title="Sign out"
-            >
-              <LogOut className="w-3.5 h-3.5" />
             </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setProfileOpen(true)}
+                className="p-1.5 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                title="Edit Profile"
+              >
+                <Settings className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={signOut}
+                className="p-1.5 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                title="Sign out"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         )}
         <div>
@@ -121,6 +160,8 @@ const SidebarContent = ({ activeTool, onSelectTool }: { activeTool: ToolId; onSe
           <p className="mono-text text-muted-foreground">Files processed in memory</p>
         </div>
       </div>
+
+      <ProfileDialog open={profileOpen} onClose={() => setProfileOpen(false)} />
     </>
   );
 };
