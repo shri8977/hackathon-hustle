@@ -15,6 +15,9 @@ import AIQuestions from "@/tools/AIQuestions";
 import AddWatermark from "@/tools/AddWatermark";
 import CompressPDF from "@/tools/CompressPDF";
 
+// ✅ IMPORT MODAL
+import EditProfileModal from "@/components/EditProfileModal";
+
 const TOOL_COMPONENTS: Record<string, React.ComponentType<any> | null> = {
   merge: MergePDF,
   split: SplitPDF,
@@ -32,7 +35,11 @@ const Index = () => {
   const [activeTool, setActiveTool] = useState<ToolId>("home");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const ActiveComponent = activeTool !== "home" ? TOOL_COMPONENTS[activeTool] : null;
+  // ✅ ADD THIS STATE
+  const [openProfile, setOpenProfile] = useState(false);
+
+  const ActiveComponent =
+    activeTool !== "home" ? TOOL_COMPONENTS[activeTool] : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -51,13 +58,20 @@ const Index = () => {
         >
           <Menu className="w-5 h-5" />
         </button>
+
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
             <FileText className="w-3.5 h-3.5 text-primary-foreground" />
           </div>
-          <span className="font-semibold text-foreground text-sm tracking-tight">DocFlow AI</span>
+          <span className="font-semibold text-foreground text-sm tracking-tight">
+            DocFlow AI
+          </span>
         </div>
-        <ThemeToggle />
+
+        {/* ✅ CHANGE THIS (trigger modal) */}
+        <button onClick={() => setOpenProfile(true)}>
+          <ThemeToggle />
+        </button>
       </header>
 
       <main className="md:ml-64 pb-12 pt-14 md:pt-0">
@@ -71,6 +85,12 @@ const Index = () => {
       </main>
 
       <StatusTicker />
+
+      {/* ✅ ADD MODAL HERE (VERY IMPORTANT) */}
+      <EditProfileModal
+        isOpen={openProfile}
+        onClose={() => setOpenProfile(false)}
+      />
     </div>
   );
 };
