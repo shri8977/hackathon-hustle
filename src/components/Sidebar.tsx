@@ -1,11 +1,14 @@
+import { useState, useEffect } from "react";
 import { 
   FileText, Image, ScanText, Scissors, Combine, Minimize2, FileOutput, Home, 
-  Sparkles, Languages, HelpCircle, Droplets, LogOut, X
+  Sparkles, Languages, HelpCircle, Droplets, LogOut, X, Settings
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import ProfileDialog from "./ProfileDialog";
 
 export type ToolId = 
   | "home" 
