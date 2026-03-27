@@ -2,47 +2,38 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+async function callGemini(prompt: string, systemPrompt: string) {
+  const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+  if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY not configured");
 
-  try {
-    const { text, targetLanguage } = await req.json();
-
-    const translated = `[Translated to ${targetLanguage}]: ${text}`;
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        translation: translated,
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: [{ parts: [{ text: prompt }] }],
       }),
-      {
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-  } catch {
-    return new Response(
-      JSON.stringify({ success: false, message: "Error" }),
-      {
-        status: 500,
-        headers: corsHeaders,
-      }
-    );
-  }
-});import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+    }
+  );
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+  if (response.status === 429) throw new Error("Rate limit reached. Please try again in a moment.");
+  if (!response.ok) {
+    const err = await response.text();
+    console.error("Gemini error:", response.status, err);
+    throw new Error("AI service error");
+  }
+
+  const result = await response.json();
+  const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error("AI returned empty response");
+  return text;
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -50,42 +41,19 @@ serve(async (req) => {
   try {
     const { text, targetLanguage } = await req.json();
     if (!text || !targetLanguage) {
-      return new Response(JSON.stringify({ success: false, message: "Text and target language required" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify({ success: false, message: "Text and target language required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const translation = await callGemini(
+      `Translate the following text to ${targetLanguage}:\n\n${text.slice(0, 15000)}`,
+      "You are a professional translator. Translate accurately while preserving the original meaning, tone, and formatting. Only return the translation, no explanations."
+    );
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: `You are a professional translator. Translate the given text accurately to ${targetLanguage}. Preserve formatting and structure. Only output the translation, no explanations.` },
-          { role: "user", content: text.slice(0, 15000) },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      const status = response.status;
-      if (status === 429) return new Response(JSON.stringify({ success: false, message: "Rate limit exceeded." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      if (status === 402) return new Response(JSON.stringify({ success: false, message: "Credits exhausted." }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      throw new Error(`AI gateway error: ${status}`);
-    }
-
-    const data = await response.json();
-    const translation = data.choices?.[0]?.message?.content || "Could not translate.";
-
-    return new Response(JSON.stringify({ success: true, translation }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  } catch (e) {
-    return new Response(JSON.stringify({ success: false, message: e instanceof Error ? e.message : "Unknown error" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify({ success: true, translation }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, message: err.message || "Something went wrong" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
