@@ -42,7 +42,7 @@ const EditProfileModal = ({ isOpen, onClose }: Props) => {
         .from("profiles")
         .select("full_name, avatar_url")
         .eq("id", user.id)
-        .maybesingle();
+        .maybeSingle();
 
       setName(data?.full_name || "");
       setSelectedAvatar(data?.avatar_url || avatars[0]);
