@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   isOpen: boolean;
@@ -32,13 +33,44 @@ const EditProfileModal = ({ isOpen, onClose }: Props) => {
     };
   }, [isOpen]);
 
-  // 👤 Load user data
+  // 🔥 Fetch profile from Supabase
   useEffect(() => {
-    if (user) {
-      setName(user.user_metadata?.full_name || "");
-      setSelectedAvatar(user.user_metadata?.avatar_url || avatars[0]);
+    const fetchProfile = async () => {
+      if (!user) return;
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", user.id)
+        .single();
+
+      setName(data?.full_name || "");
+      setSelectedAvatar(data?.avatar_url || avatars[0]);
+    };
+
+    if (isOpen) fetchProfile();
+  }, [user, isOpen]);
+
+  // 🔥 Save to Supabase
+  const handleSave = async () => {
+    if (!user) return;
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        full_name: name,
+        avatar_url: selectedAvatar,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", user.id);
+
+    if (error) {
+      console.log("Error:", error.message);
+    } else {
+      console.log("Saved successfully ✅");
+      onClose();
     }
-  }, [user]);
+  };
 
   if (!isOpen) return null;
 
@@ -47,7 +79,6 @@ const EditProfileModal = ({ isOpen, onClose }: Props) => {
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
       onClick={onClose}
     >
-      {/* Modal */}
       <div
         onClick={(e) => e.stopPropagation()}
         className="bg-white dark:bg-zinc-900 rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-xl"
@@ -111,6 +142,7 @@ const EditProfileModal = ({ isOpen, onClose }: Props) => {
             Cancel
           </button>
           <button
+            onClick={handleSave}
             className="px-4 py-2 rounded-lg bg-primary text-white hover:opacity-90"
           >
             Save Changes
