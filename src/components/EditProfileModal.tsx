@@ -42,7 +42,7 @@ const EditProfileModal = ({ isOpen, onClose }: Props) => {
         .from("profiles")
         .select("full_name, avatar_url")
         .eq("id", user.id)
-        .single();
+        .maybesingle();
 
       setName(data?.full_name || "");
       setSelectedAvatar(data?.avatar_url || avatars[0]);
@@ -56,14 +56,13 @@ const EditProfileModal = ({ isOpen, onClose }: Props) => {
     if (!user) return;
 
     const { error } = await supabase
-      .from("profiles")
-      .update({
-        full_name: name,
-        avatar_url: selectedAvatar,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", user.id);
-
+  .from("profiles")
+  .upsert({
+    id: user.id, // 🔥 IMPORTANT
+    full_name: name,
+    avatar_url: selectedAvatar,
+    updated_at: new Date().toISOString(),
+  });
     if (error) {
       console.log("Error:", error.message);
     } else {
